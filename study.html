@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyGen AI – Learn Smarter, Prepare Better</title>
+  <style>
+    /* ─── Reset & Base ───────────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --blue:       #3b82f6;
+      --blue-dark:  #1d4ed8;
+      --purple:     #7c3aed;
+      --purple-lt:  #a78bfa;
+      --bg:         #0d0f1a;
+      --surface:    rgba(255,255,255,0.05);
+      --border:     rgba(255,255,255,0.10);
+      --text:       #f1f5f9;
+      --muted:      #94a3b8;
+      --grad:       linear-gradient(135deg, #3b82f6 0%, #7c3aed 100%);
+      --grad-soft:  linear-gradient(135deg, rgba(59,130,246,0.15) 0%, rgba(124,58,237,0.15) 100%);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ─── Scrollbar ──────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 3px; }
+
+    /* ─── Utility ────────────────────────────────────────────────── */
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 96px 0; }
+    .section-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(1.75rem, 3.5vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 560px;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: .95rem;
+      cursor: pointer;
+      border: none;
+      transition: transform .2s, box-shadow .2s, opacity .2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      background: var(--grad);
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(124,58,237,.35);
+    }
+    .btn-primary:hover { box-shadow: 0 8px 32px rgba(124,58,237,.5); }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      backdrop-filter: blur(6px);
+    }
+    .btn-outline:hover { border-color: var(--purple-lt); }
+
+    /* glass card */
+    .glass {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(14px);
+    }
+
+    /* fade-up animation */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── Nav ────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(13,15,26,0.7);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 66px;
+    }
+    .nav-logo {
+      font-size: 1.25rem; font-weight: 800;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-links {
+      display: flex; gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: .9rem; font-weight: 500; color: var(--muted);
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { display: flex; gap: 12px; align-items: center; }
+    .hamburger {
+      display: none;
+      flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--text); border-radius: 2px;
+      transition: transform .3s, opacity .3s;
+    }
+    .mobile-menu {
+      display: none;
+      flex-direction: column; gap: 0;
+      background: rgba(13,15,26,0.97);
+      border-top: 1px solid var(--border);
+      padding: 16px 24px 20px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      padding: 12px 0;
+      font-size: 1rem; font-weight: 500; color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      transition: color .2s;
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover { color: var(--text); }
+
+    /* ─── Hero ───────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding-top: 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none;
+    }
+    .hero-glow-1 {
+      width: 480px; height: 480px;
+      background: rgba(124,58,237,.3);
+      top: -80px; right: -80px;
+    }
+    .hero-glow-2 {
+      width: 360px; height: 360px;
+      background: rgba(59,130,246,.2);
+      bottom: 60px; left: -60px;
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+      align-items: center; position: relative; z-index: 1;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: .8rem; font-weight: 600;
+      background: rgba(124,58,237,.15);
+      border: 1px solid rgba(124,58,237,.3);
+      color: var(--purple-lt);
+      margin-bottom: 24px;
+    }
+    .hero-badge svg { width: 14px; height: 14px; }
+    .hero-title {
+      font-size: clamp(2rem, 4.5vw, 3.4rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+    .hero-title span {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-desc { color: var(--muted); font-size: 1.05rem; margin-bottom: 32px; max-width: 480px; }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-stats {
+      display: flex; gap: 32px; margin-top: 48px; flex-wrap: wrap;
+    }
+    .hero-stat-val {
+      font-size: 1.6rem; font-weight: 800;
+      background: var(--grad);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-stat-label { font-size: .8rem; color: var(--muted); }
+
+    /* chat preview card */
+    .chat-preview {
+      padding: 24px;
+      position: relative;
+    }
+    .chat-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .chat-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--grad);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+    }
+    .chat-name { font-weight: 700; font-size: .95rem; }
+    .chat-status { font-size: .75rem; color: #4ade80; display: flex; align-items: center; gap: 4px; }
+    .chat-status::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #4ade80; }
+    .chat-msgs { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+    .msg { max-width: 82%; padding: 11px 16px; border-radius: 16px; font-size: .875rem; line-height: 1.5; }
+    .msg-bot {
+      background: rgba(124,58,237,.15);
+      border: 1px solid rgba(124,58,237,.2);
+      border-bottom-left-radius: 4px;
+      align-self: flex-start;
+    }
+    .msg-user {
+      background: var(--grad);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+      align-self: flex-end;
+    }
+    .chat-input-row {
+      display: flex; gap: 8px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .chat-input {
+      flex: 1; background: none; border: none; outline: none;
+      color: var(--text); font-size: .875rem;
+    }
+    .chat-input::placeholder { color: var(--muted); }
+    .chat-send {
+      background: var(--grad); border: none; border-radius: 8px;
+      padding: 6px 12px; color: #fff; cursor: pointer; font-size: .8rem; font-weight: 600;
+      transition: opacity .2s;
+    }
+    .chat-send:hover { opacity: .85; }
+    .typing { display: flex; gap: 4px; align-items: center; padding: 11px 16px; }
+    .typing span {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--purple-lt);
+      animation: bounce 1.2s infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: .2s; }
+    .typing span:nth-child(3) { animation-delay: .4s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-6px); }
+    }
+
+    /* ─── Features ───────────────────────────────────────────────── */
+    #features { background: rgba(255,255,255,.02); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 56px;
+    }
+    .feature-card {
+      padding: 30px;
+      transition: transform .3s, box-shadow .3s;
+    }
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(124,58,237,.15);
+    }
+    .feature-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: var(--grad-soft);
+      border: 1px solid rgba(124,58,237,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 18px;
+    }
+    .feature-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+    .feature-desc { font-size: .875rem; color: var(--muted); line-height: 1.7; }
+
+    /* ─── How It Works ───────────────────────────────────────────── */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; margin-top: 56px; }
+    .step { text-align: center; padding: 0 16px; }
+    .step-num {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--grad);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; font-weight: 800; color: #fff;
+      margin: 0 auto 18px;
+      box-shadow: 0 0 0 8px rgba(124,58,237,.12);
+    }
+    .step-title { font-weight: 700; margin-bottom: 10px; }
+    .step-desc { font-size: .875rem; color: var(--muted); }
+    .steps-connector { display: none; }
+
+    /* ─── Dashboard ──────────────────────────────────────────────── */
+    #dashboard { background: rgba(255,255,255,.02); }
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 56px; }
+    .dash-card { padding: 28px; }
+    .dash-card-title { font-size: .85rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .dash-card-val { font-size: 2rem; font-weight: 800; }
+    .dash-card-sub { font-size: .8rem; color: var(--muted); margin-top: 4px; }
+    .progress-bar-bg { height: 8px; background: rgba(255,255,255,.08); border-radius: 4px; margin-top: 12px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; border-radius: 4px; background: var(--grad); transition: width 1.4s ease; }
+    .subject-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .subject-name { font-size: .875rem; font-weight: 600; }
+    .subject-pct { font-size: .8rem; color: var(--muted); }
+
+    /* SVG chart */
+    .chart-wrap { margin-top: 12px; }
+    .chart-wrap svg { width: 100%; height: 140px; overflow: visible; }
+    .chart-bar { fill: url(#barGrad); rx: 4px; transition: opacity .2s; }
+    .chart-bar:hover { opacity: .7; }
+    .chart-label { font-size: 10px; fill: var(--muted); text-anchor: middle; }
+
+    /* activity feed */
+    .activity-list { margin-top: 16px; display: flex; flex-direction: column; gap: 14px; }
+    .activity-item { display: flex; gap: 12px; align-items: flex-start; }
+    .activity-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--grad); flex-shrink: 0; margin-top: 5px; }
+    .activity-text { font-size: .85rem; color: var(--muted); }
+    .activity-text strong { color: var(--text); }
+    .activity-time { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+    .streak-row { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+    .streak-day {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(255,255,255,.06);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; font-weight: 600; color: var(--muted);
+    }
+    .streak-day.done { background: var(--grad); color: #fff; }
+    .streak-day.today { box-shadow: 0 0 0 2px var(--purple-lt); }
+
+    /* ─── Testimonials ───────────────────────────────────────────── */
+    .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 56px; }
+    .testimonial-card { padding: 28px; }
+    .stars { color: #fbbf24; font-size: 1rem; margin-bottom: 14px; letter-spacing: 2px; }
+    .testimonial-text { font-size: .9rem; color: var(--muted); line-height: 1.75; margin-bottom: 18px; }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .author-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--grad);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: .9rem; color: #fff; flex-shrink: 0;
+    }
+    .author-name { font-weight: 700; font-size: .9rem; }
+    .author-role { font-size: .78rem; color: var(--muted); }
+
+    /* ─── Chatbot Section ────────────────────────────────────────── */
+    #chatbot { background: rgba(255,255,255,.02); }
+    .chatbot-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 56px; }
+    .chatbot-features { display: flex; flex-direction: column; gap: 18px; }
+    .chatbot-feature { display: flex; gap: 14px; align-items: flex-start; }
+    .chatbot-feature-icon {
+      width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+      background: var(--grad-soft); border: 1px solid rgba(124,58,237,.2);
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+    }
+    .chatbot-feature-title { font-weight: 700; font-size: .9rem; margin-bottom: 4px; }
+    .chatbot-feature-desc { font-size: .82rem; color: var(--muted); }
+    .full-chat {
+      padding: 28px;
+      height: 480px;
+      display: flex; flex-direction: column;
+    }
+    .full-chat-msgs {
+      flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
+      padding-right: 4px; margin-bottom: 16px;
+    }
+    .full-chat-msgs::-webkit-scrollbar { width: 4px; }
+    .full-chat-msgs::-webkit-scrollbar-thumb { background: rgba(124,58,237,.4); border-radius: 2px; }
+    .full-chat-input-row {
+      display: flex; gap: 8px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+    }
+    .full-chat-input {
+      flex: 1; background: none; border: none; outline: none;
+      color: var(--text); font-size: .9rem;
+    }
+    .full-chat-input::placeholder { color: var(--muted); }
+    .full-chat-send {
+      background: var(--grad); border: none; border-radius: 9px;
+      width: 36px; height: 36px; cursor: pointer; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity .2s; flex-shrink: 0;
+    }
+    .full-chat-send:hover { opacity: .8; }
+    .quick-prompts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .quick-prompt {
+      padding: 5px 12px; border-radius: 100px; font-size: .75rem; font-weight: 600;
+      background: rgba(124,58,237,.12); border: 1px solid rgba(124,58,237,.25);
+      color: var(--purple-lt); cursor: pointer; transition: background .2s;
+    }
+    .quick-prompt:hover { background: rgba(124,58,237,.25); }
+
+    /* ─── Contact ────────────────────────────────────────────────── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; margin-top: 56px; }
+    .contact-info-item { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 24px; }
+    .contact-info-icon {
+      width: 42px; height: 42px; border-radius: 11px; flex-shrink: 0;
+      background: var(--grad-soft); border: 1px solid rgba(124,58,237,.2);
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+    }
+    .contact-info-label { font-weight: 700; font-size: .875rem; margin-bottom: 2px; }
+    .contact-info-val { font-size: .85rem; color: var(--muted); }
+    .contact-form { padding: 32px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+    .form-label { font-size: .82rem; font-weight: 600; color: var(--muted); }
+    .form-input, .form-textarea, .form-select {
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: var(--text); font-size: .9rem;
+      outline: none; transition: border-color .2s;
+      font-family: inherit;
+      resize: none;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--purple); }
+    .form-input::placeholder, .form-textarea::placeholder { color: var(--muted); }
+    .form-select option { background: #1e1e2e; }
+    .form-textarea { min-height: 110px; }
+
+    /* ─── Footer ─────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0 32px;
+    }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .footer-brand p { font-size: .875rem; color: var(--muted); margin-top: 12px; max-width: 260px; line-height: 1.7; }
+    .footer-col-title { font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { font-size: .875rem; color: var(--muted); transition: color .2s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; }
+    .footer-copy { font-size: .8rem; color: var(--muted); }
+    .social-row { display: flex; gap: 12px; }
+    .social-btn {
+      width: 36px; height: 36px; border-radius: 9px;
+      background: rgba(255,255,255,.06); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); transition: color .2s, border-color .2s;
+      font-size: .85rem; font-weight: 700;
+    }
+    .social-btn:hover { color: var(--text); border-color: var(--purple-lt); }
+
+    /* ─── WxO Chat Embed ─────────────────────────────────────────── */
+    #root { position: fixed; bottom: 24px; right: 24px; z-index: 9999; }
+
+    /* ─── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hero-grid, .chatbot-wrap, .contact-grid, .dashboard-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .hero-stat-val { font-size: 1.3rem; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .section { padding: 64px 0; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; }
+      .btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Navigation ─────────────────────────────────────────────── -->
+<nav>
+  <div class="container nav-inner">
+    <a href="#hero" class="nav-logo">StudyGen AI</a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#chatbot">AI Chat</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="#chatbot" class="btn btn-outline" style="padding:9px 20px;font-size:.85rem;">Try Demo</a>
+      <a href="#contact" class="btn btn-primary" style="padding:9px 20px;font-size:.85rem;">Get Started</a>
+    </div>
+    <div class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#features">Features</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#chatbot">AI Chat</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ─── Hero ───────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+  <div class="container">
+    <div class="hero-grid">
+      <!-- Left -->
+      <div class="fade-up">
+        <div class="hero-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+          Powered by IBM Watson Orchestrate AI
+        </div>
+        <h1 class="hero-title">
+          StudyGen AI –<br>
+          <span>Learn Smarter,</span><br>
+          Prepare Better
+        </h1>
+        <p class="hero-desc">
+          Your intelligent study companion that creates personalised study plans, summarises chapters, generates quizzes, and explains complex concepts — all in one place.
+        </p>
+        <div class="hero-actions">
+          <a href="#chatbot" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Start Chatting
+          </a>
+          <a href="#features" class="btn btn-outline">Explore Features</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-val">50K+</div>
+            <div class="hero-stat-label">Active Students</div>
+          </div>
+          <div>
+            <div class="hero-stat-val">98%</div>
+            <div class="hero-stat-label">Satisfaction Rate</div>
+          </div>
+          <div>
+            <div class="hero-stat-val">2M+</div>
+            <div class="hero-stat-label">Quizzes Generated</div>
+          </div>
+        </div>
+      </div>
+      <!-- Right: Chat Preview -->
+      <div class="fade-up" style="transition-delay:.2s">
+        <div class="glass chat-preview">
+          <div class="chat-header">
+            <div class="chat-avatar">S</div>
+            <div>
+              <div class="chat-name">StudyGen AI</div>
+              <div class="chat-status">Online – ready to help</div>
+            </div>
+          </div>
+          <div class="chat-msgs">
+            <div class="msg msg-bot">👋 Hi! I'm StudyGen AI. How can I help you study today?</div>
+            <div class="msg msg-user">Can you summarise Chapter 5 on Photosynthesis?</div>
+            <div class="msg msg-bot">
+              📗 <strong>Photosynthesis Summary:</strong><br><br>
+              Photosynthesis converts light energy into chemical energy stored in glucose. It occurs in chloroplasts through two stages: the <em>light reactions</em> (produce ATP & NADPH) and the <em>Calvin Cycle</em> (fixes CO₂ into sugar).
+            </div>
+            <div class="msg msg-user">Generate a 5-question quiz on this topic</div>
+            <div class="glass msg msg-bot typing"><span></span><span></span><span></span></div>
+          </div>
+          <div class="chat-input-row">
+            <input class="chat-input" placeholder="Ask anything…" readonly />
+            <button class="chat-send">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Features ───────────────────────────────────────────────── -->
+<section id="features" class="section">
+  <div class="container">
+    <div class="fade-up" style="text-align:center;">
+      <div class="section-tag">Features</div>
+      <h2 class="section-title">Everything You Need to Excel</h2>
+      <p class="section-sub" style="margin:0 auto;">Six powerful AI tools built to accelerate your learning and help you achieve top results.</p>
+    </div>
+    <div class="features-grid">
+      <div class="glass feature-card fade-up">
+        <div class="feature-icon">📅</div>
+        <div class="feature-title">Study Planner</div>
+        <div class="feature-desc">AI-generated personalised study schedules based on your syllabus, deadlines, and learning pace. Never miss a revision session again.</div>
+      </div>
+      <div class="glass feature-card fade-up" style="transition-delay:.05s">
+        <div class="feature-icon">📖</div>
+        <div class="feature-title">Chapter Summariser</div>
+        <div class="feature-desc">Paste any chapter text or upload a document and get a crisp, structured summary with key concepts, bullet points, and definitions.</div>
+      </div>
+      <div class="glass feature-card fade-up" style="transition-delay:.10s">
+        <div class="feature-icon">📄</div>
+        <div class="feature-title">PDF Upload</div>
+        <div class="feature-desc">Upload lecture slides, textbooks, or notes in PDF format. StudyGen AI reads, indexes, and answers questions directly from your material.</div>
+      </div>
+      <div class="glass feature-card fade-up" style="transition-delay:.15s">
+        <div class="feature-icon">🧠</div>
+        <div class="feature-title">Quiz Generator</div>
+        <div class="feature-desc">Instantly generate MCQs, true/false, short-answer, and fill-in-the-blank questions from any topic or uploaded content. Practise smarter.</div>
+      </div>
+      <div class="glass feature-card fade-up" style="transition-delay:.20s">
+        <div class="feature-icon">🃏</div>
+        <div class="feature-title">Flashcards</div>
+        <div class="feature-desc">Auto-create spaced-repetition flashcard decks from your notes. Track which cards you know and focus energy on what needs more review.</div>
+      </div>
+      <div class="glass feature-card fade-up" style="transition-delay:.25s">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Progress Tracker</div>
+        <div class="feature-desc">Visual dashboards show your study streaks, quiz scores, time spent, and topic mastery — so you always know where to improve.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── How It Works ───────────────────────────────────────────── -->
+<section id="how-it-works" class="section">
+  <div class="container">
+    <div class="fade-up" style="text-align:center;">
+      <div class="section-tag">Process</div>
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-sub" style="margin:0 auto;">Get from zero to exam-ready in four simple steps.</p>
+    </div>
+    <div class="steps">
+      <div class="step fade-up">
+        <div class="step-num">1</div>
+        <div class="step-title">Create Your Profile</div>
+        <div class="step-desc">Sign up and tell StudyGen AI your subjects, syllabus, exam dates, and preferred learning style.</div>
+      </div>
+      <div class="step fade-up" style="transition-delay:.1s">
+        <div class="step-num">2</div>
+        <div class="step-title">Upload Your Material</div>
+        <div class="step-desc">Import PDFs, paste notes, or just describe your topics. The AI ingests and understands your content.</div>
+      </div>
+      <div class="step fade-up" style="transition-delay:.2s">
+        <div class="step-num">3</div>
+        <div class="step-title">Chat & Generate</div>
+        <div class="step-desc">Ask the AI to explain, summarise, quiz you, create flashcards, or build a personalised study plan.</div>
+      </div>
+      <div class="step fade-up" style="transition-delay:.3s">
+        <div class="step-num">4</div>
+        <div class="step-title">Track & Improve</div>
+        <div class="step-desc">Monitor your progress in real time, see weak areas, and let the AI adapt your plan until exam day.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Student Dashboard ──────────────────────────────────────── -->
+<section id="dashboard" class="section">
+  <div class="container">
+    <div class="fade-up">
+      <div class="section-tag">Dashboard</div>
+      <h2 class="section-title">Your Learning at a Glance</h2>
+      <p class="section-sub">A real-time snapshot of your study activity, subject progress, and streaks.</p>
+    </div>
+    <div class="dashboard-grid" style="margin-top:56px;">
+
+      <!-- Weekly Activity Chart -->
+      <div class="glass dash-card fade-up">
+        <div class="dash-card-title">Weekly Study Hours</div>
+        <div class="chart-wrap">
+          <svg viewBox="0 0 280 140" id="barChart">
+            <defs>
+              <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#7c3aed"/>
+                <stop offset="100%" stop-color="#3b82f6"/>
+              </linearGradient>
+            </defs>
+            <!-- bars: Mon–Sun -->
+            <rect class="chart-bar" x="10"  y="80"  width="28" height="50" rx="4"/>
+            <rect class="chart-bar" x="50"  y="50"  width="28" height="80" rx="4"/>
+            <rect class="chart-bar" x="90"  y="65"  width="28" height="65" rx="4"/>
+            <rect class="chart-bar" x="130" y="30"  width="28" height="100" rx="4"/>
+            <rect class="chart-bar" x="170" y="55"  width="28" height="75" rx="4"/>
+            <rect class="chart-bar" x="210" y="20"  width="28" height="110" rx="4"/>
+            <rect class="chart-bar" x="250" y="70"  width="28" height="60" rx="4"/>
+            <text class="chart-label" x="24"  y="138">Mon</text>
+            <text class="chart-label" x="64"  y="138">Tue</text>
+            <text class="chart-label" x="104" y="138">Wed</text>
+            <text class="chart-label" x="144" y="138">Thu</text>
+            <text class="chart-label" x="184" y="138">Fri</text>
+            <text class="chart-label" x="224" y="138">Sat</text>
+            <text class="chart-label" x="264" y="138">Sun</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Subject Progress -->
+      <div class="glass dash-card fade-up" style="transition-delay:.1s">
+        <div class="dash-card-title">Subject Mastery</div>
+        <div style="margin-top:16px;">
+          <div class="subject-row"><span class="subject-name">Mathematics</span><span class="subject-pct">82%</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" data-width="82%"></div></div>
+          <div style="margin-top:14px;" class="subject-row"><span class="subject-name">Physics</span><span class="subject-pct">67%</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" data-width="67%"></div></div>
+          <div style="margin-top:14px;" class="subject-row"><span class="subject-name">Chemistry</span><span class="subject-pct">74%</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" data-width="74%"></div></div>
+          <div style="margin-top:14px;" class="subject-row"><span class="subject-name">Biology</span><span class="subject-pct">91%</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" data-width="91%"></div></div>
+          <div style="margin-top:14px;" class="subject-row"><span class="subject-name">English</span><span class="subject-pct">58%</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" data-width="58%"></div></div>
+        </div>
+      </div>
+
+      <!-- Stats cards -->
+      <div class="glass dash-card fade-up" style="transition-delay:.2s;">
+        <div class="dash-card-title">Study Streak</div>
+        <div class="dash-card-val">🔥 14 Days</div>
+        <div class="dash-card-sub">Personal best: 21 days</div>
+        <div class="streak-row">
+          <div class="streak-day done">M</div>
+          <div class="streak-day done">T</div>
+          <div class="streak-day done">W</div>
+          <div class="streak-day done">T</div>
+          <div class="streak-day done today">F</div>
+          <div class="streak-day">S</div>
+          <div class="streak-day">S</div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="glass dash-card fade-up" style="transition-delay:.3s">
+        <div class="dash-card-title">Recent Activity</div>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-dot"></div>
+            <div>
+              <div class="activity-text"><strong>Quiz Completed</strong> – Organic Chemistry (Score: 88%)</div>
+              <div class="activity-time">2 hours ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot"></div>
+            <div>
+              <div class="activity-text"><strong>Flashcards Reviewed</strong> – 40 cards in Calculus</div>
+              <div class="activity-time">5 hours ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot"></div>
+            <div>
+              <div class="activity-text"><strong>Chapter Summarised</strong> – Newton's Laws of Motion</div>
+              <div class="activity-time">Yesterday</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot"></div>
+            <div>
+              <div class="activity-text"><strong>Study Plan Updated</strong> – 3 new sessions added</div>
+              <div class="activity-time">Yesterday</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── AI Chatbot Section ─────────────────────────────────────── -->
+<section id="chatbot" class="section">
+  <div class="container">
+    <div class="fade-up">
+      <div class="section-tag">AI Assistant</div>
+      <h2 class="section-title">Chat with StudyGen AI</h2>
+      <p class="section-sub">Ask questions, get summaries, generate quizzes and study plans — powered by IBM Watson Orchestrate.</p>
+    </div>
+    <div class="chatbot-wrap">
+      <!-- Left: features -->
+      <div class="chatbot-features fade-up">
+        <div class="chatbot-feature">
+          <div class="chatbot-feature-icon">💬</div>
+          <div>
+            <div class="chatbot-feature-title">Instant Q&A</div>
+            <div class="chatbot-feature-desc">Ask any academic question and receive accurate, source-grounded answers instantly.</div>
+          </div>
+        </div>
+        <div class="chatbot-feature">
+          <div class="chatbot-feature-icon">📝</div>
+          <div>
+            <div class="chatbot-feature-title">Note Summarisation</div>
+            <div class="chatbot-feature-desc">Paste your raw notes and get a structured, concise summary with highlighted key points.</div>
+          </div>
+        </div>
+        <div class="chatbot-feature">
+          <div class="chatbot-feature-icon">🧪</div>
+          <div>
+            <div class="chatbot-feature-title">Quiz Generation</div>
+            <div class="chatbot-feature-desc">Generate customised quizzes with adjustable difficulty on any topic or uploaded content.</div>
+          </div>
+        </div>
+        <div class="chatbot-feature">
+          <div class="chatbot-feature-icon">📆</div>
+          <div>
+            <div class="chatbot-feature-title">Study Plans</div>
+            <div class="chatbot-feature-desc">Tell the AI your subjects and exam dates; it builds an optimised, day-by-day plan for you.</div>
+          </div>
+        </div>
+        <div class="chatbot-feature">
+          <div class="chatbot-feature-icon">🔬</div>
+          <div>
+            <div class="chatbot-feature-title">Concept Explanation</div>
+            <div class="chatbot-feature-desc">Complex topics explained in plain, simple language with examples and analogies tailored to you.</div>
+          </div>
+        </div>
+      </div>
+      <!-- Right: full chat interface -->
+      <div class="glass full-chat fade-up" style="transition-delay:.15s" id="chatWindow">
+        <div class="full-chat-msgs" id="chatMessages">
+          <div class="msg msg-bot">👋 Hello! I'm StudyGen AI, your personal study assistant powered by IBM Watson.<br><br>I can help you summarise notes, generate quizzes, create study plans, explain concepts, and more. What would you like to do today?</div>
+        </div>
+        <div class="quick-prompts">
+          <span class="quick-prompt" data-prompt="Generate a quiz on the French Revolution">📝 Quiz me</span>
+          <span class="quick-prompt" data-prompt="Create a 2-week study plan for my Math exam">📆 Study plan</span>
+          <span class="quick-prompt" data-prompt="Explain Pythagoras theorem simply">🔬 Explain concept</span>
+          <span class="quick-prompt" data-prompt="Summarise the causes of World War I">📖 Summarise</span>
+        </div>
+        <div class="full-chat-input-row">
+          <input class="full-chat-input" id="chatInput" placeholder="Ask StudyGen AI anything…" />
+          <button class="full-chat-send" id="chatSendBtn" aria-label="Send">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Testimonials ───────────────────────────────────────────── -->
+<section id="testimonials" class="section" style="background:rgba(255,255,255,.02);">
+  <div class="container">
+    <div class="fade-up" style="text-align:center;">
+      <div class="section-tag">Testimonials</div>
+      <h2 class="section-title">Students Love StudyGen AI</h2>
+      <p class="section-sub" style="margin:0 auto;">Hear from real students who transformed their study habits.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="glass testimonial-card fade-up">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"StudyGen AI completely changed how I prepare for exams. The quiz generator is incredible — it picked exactly the right questions that appeared on my test!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">A</div>
+          <div>
+            <div class="author-name">Aisha Patel</div>
+            <div class="author-role">Year 12 Student, Mumbai</div>
+          </div>
+        </div>
+      </div>
+      <div class="glass testimonial-card fade-up" style="transition-delay:.1s">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"I used the PDF upload feature to summarise my 200-page physics textbook in minutes. The chapter summaries are accurate and super easy to review."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">J</div>
+          <div>
+            <div class="author-name">James Okonkwo</div>
+            <div class="author-role">University Student, Lagos</div>
+          </div>
+        </div>
+      </div>
+      <div class="glass testimonial-card fade-up" style="transition-delay:.2s">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"The AI study planner keeps me on track every week. My grades went from B to A in just one term. I recommend StudyGen AI to every student I know!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">S</div>
+          <div>
+            <div class="author-name">Sofia Hernandez</div>
+            <div class="author-role">High School Senior, Mexico City</div>
+          </div>
+        </div>
+      </div>
+      <div class="glass testimonial-card fade-up" style="transition-delay:.3s">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Explaining hard Chemistry concepts in simple language is where this tool shines. My teacher even asked where I was getting such clear explanations from!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">L</div>
+          <div>
+            <div class="author-name">Liam Chen</div>
+            <div class="author-role">A-Level Student, Singapore</div>
+          </div>
+        </div>
+      </div>
+      <div class="glass testimonial-card fade-up" style="transition-delay:.35s">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Flashcard generation saved me hours of manual work. The spaced-repetition system knows exactly when to show me the cards I keep forgetting. Brilliant!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">P</div>
+          <div>
+            <div class="author-name">Priya Sharma</div>
+            <div class="author-role">Medical Student, Delhi</div>
+          </div>
+        </div>
+      </div>
+      <div class="glass testimonial-card fade-up" style="transition-delay:.4s">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"The Progress Tracker gives me real clarity on where I'm weak. Being able to see subject mastery visually motivates me to push harder every day."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">K</div>
+          <div>
+            <div class="author-name">Kwame Asante</div>
+            <div class="author-role">College Student, Accra</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Contact ────────────────────────────────────────────────── -->
+<section id="contact" class="section">
+  <div class="container">
+    <div class="fade-up">
+      <div class="section-tag">Contact</div>
+      <h2 class="section-title">Get in Touch</h2>
+      <p class="section-sub">Have questions about StudyGen AI? We'd love to hear from you.</p>
+    </div>
+    <div class="contact-grid">
+      <!-- Left: info -->
+      <div class="fade-up" style="padding-top:16px;">
+        <div class="contact-info-item">
+          <div class="contact-info-icon">📧</div>
+          <div>
+            <div class="contact-info-label">Email Us</div>
+            <div class="contact-info-val">hello@studygenai.com</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">💬</div>
+          <div>
+            <div class="contact-info-label">Live Chat</div>
+            <div class="contact-info-val">Available 24/7 via the AI chatbot on this page</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">🌍</div>
+          <div>
+            <div class="contact-info-label">Headquarters</div>
+            <div class="contact-info-val">Sydney, Australia · Serving students worldwide</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">🕐</div>
+          <div>
+            <div class="contact-info-label">Support Hours</div>
+            <div class="contact-info-val">Mon – Fri · 9AM – 6PM AEST</div>
+          </div>
+        </div>
+        <div style="margin-top:8px;">
+          <p style="font-size:.875rem;color:var(--muted);line-height:1.75;">
+            For urgent academic queries, our AI assistant is always available. For billing or account issues, send us an email and we'll respond within 24 hours.
+          </p>
+        </div>
+      </div>
+      <!-- Right: form -->
+      <div class="glass contact-form fade-up" style="transition-delay:.15s">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" placeholder="John" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" placeholder="Doe" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" placeholder="john@example.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <select class="form-select">
+            <option value="">Select a topic…</option>
+            <option>General Inquiry</option>
+            <option>Study Planner Help</option>
+            <option>PDF Upload Issues</option>
+            <option>Quiz Generator</option>
+            <option>Billing & Plans</option>
+            <option>Technical Support</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-textarea" placeholder="Tell us how we can help…"></textarea>
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;" id="contactSend">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          Send Message
+        </button>
+        <p id="contactSuccess" style="display:none;text-align:center;color:#4ade80;font-size:.875rem;margin-top:14px;font-weight:600;">✅ Message sent! We'll be in touch within 24 hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Footer ─────────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="font-size:1.15rem;">StudyGen AI</div>
+        <p>Your AI-powered study companion for smarter learning, better preparation, and exam success — available 24/7.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Product</div>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#dashboard">Dashboard</a></li>
+          <li><a href="#chatbot">AI Chat</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Resources</div>
+        <ul class="footer-links">
+          <li><a href="#contact">Blog</a></li>
+          <li><a href="#contact">Documentation</a></li>
+          <li><a href="#contact">Help Centre</a></li>
+          <li><a href="#contact">Community</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <ul class="footer-links">
+          <li><a href="#contact">Privacy Policy</a></li>
+          <li><a href="#contact">Terms of Service</a></li>
+          <li><a href="#contact">Cookie Policy</a></li>
+          <li><a href="#contact">Accessibility</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 StudyGen AI. All rights reserved. Powered by IBM Watson Orchestrate.</div>
+      <div class="social-row">
+        <a href="#" class="social-btn" aria-label="Twitter">𝕏</a>
+        <a href="#" class="social-btn" aria-label="LinkedIn">in</a>
+        <a href="#" class="social-btn" aria-label="YouTube">▶</a>
+        <a href="#" class="social-btn" aria-label="Instagram">◈</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ─── IBM Watson Orchestrate Chat Embed ──────────────────────── -->
+<div id="root"></div>
+
+<!-- ─── JavaScript ─────────────────────────────────────────────── -->
+<script>
+  /* ── Hamburger menu ── */
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  });
+
+  /* ── Intersection Observer fade-up ── */
+  const fadeEls = document.querySelectorAll('.fade-up');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  fadeEls.forEach(el => observer.observe(el));
+
+  /* ── Animate progress bars when visible ── */
+  const barObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.progress-bar-fill').forEach(bar => {
+          bar.style.width = bar.dataset.width;
+        });
+        barObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.dash-card').forEach(c => {
+    c.querySelectorAll('.progress-bar-fill').forEach(b => b.style.width = '0');
+    barObserver.observe(c);
+  });
+
+  /* ── Demo chat (hero preview — cosmetic only) ── */
+  const heroSend = document.querySelector('.chat-send');
+  const heroInput = document.querySelector('.chat-input');
+  if (heroSend && heroInput) {
+    heroSend.addEventListener('click', () => {
+      if (!heroInput.value.trim()) return;
+      heroInput.value = '';
+    });
+  }
+
+  /* ── Quick prompt pills ── */
+  document.querySelectorAll('.quick-prompt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = document.getElementById('chatInput');
+      if (input) {
+        input.value = btn.dataset.prompt;
+        input.focus();
+      }
+    });
+  });
+
+  /* ── Full chat UI (demo — routes to WxO embed automatically) ── */
+  const chatInput    = document.getElementById('chatInput');
+  const chatSendBtn  = document.getElementById('chatSendBtn');
+  const chatMessages = document.getElementById('chatMessages');
+
+  const AI_RESPONSES = {
+    quiz: "🧠 Here are 5 quiz questions on your topic:\n\n1. What year did the French Revolution begin?\n2. Who was the first estate in French society?\n3. What document declared the Rights of Man?\n4. Who was guillotined in 1793?\n5. What replaced the French monarchy?\n\nWould you like me to add correct answers or generate more questions?",
+    plan: "📅 Here's your 2-week Math study plan:\n\n📌 Week 1\nDay 1–2: Algebra revision\nDay 3–4: Trigonometry\nDay 5: Practice test\n\n📌 Week 2\nDay 6–7: Calculus basics\nDay 8–9: Past papers\nDay 10: Full mock exam\n\nI've also set daily reminders. Shall I adjust the difficulty or topics?",
+    explain: "📐 Pythagoras Theorem — Simple Explanation:\n\nIn a right-angled triangle, the square of the longest side (hypotenuse) equals the sum of squares of the other two sides.\n\n✏️ Formula: a² + b² = c²\n\n🌟 Example: If a = 3, b = 4, then c = √(9+16) = 5\n\nThink of it as: the big square on the slope = the two smaller squares combined!",
+    summarise: "📖 Summary — Causes of World War I:\n\n🔑 Key Causes (MAIN):\n• **Militarism** – Arms race between major powers\n• **Alliances** – Triple Entente vs Triple Alliance\n• **Imperialism** – Competition for colonies\n• **Nationalism** – Ethnic tensions in the Balkans\n\n🎯 Trigger: Assassination of Archduke Franz Ferdinand (June 1914)\n\nWould you like flashcards on this topic?",
+    default: "Great question! I'm here to help you with summaries, quizzes, study plans, flashcards, and concept explanations.\n\nTry asking me something like:\n• \"Summarise Chapter 3 on Cell Biology\"\n• \"Generate 10 MCQs on the Industrial Revolution\"\n• \"Explain Newton's Third Law simply\"\n• \"Create a study plan for my Chemistry exam in 3 weeks\""
+  };
+
+  function getAiResponse(text) {
+    const t = text.toLowerCase();
+    if (t.includes('quiz') || t.includes('question')) return AI_RESPONSES.quiz;
+    if (t.includes('plan') || t.includes('schedule')) return AI_RESPONSES.plan;
+    if (t.includes('explain') || t.includes('what is') || t.includes('how does') || t.includes('theorem')) return AI_RESPONSES.explain;
+    if (t.includes('summar') || t.includes('cause') || t.includes('chapter')) return AI_RESPONSES.summarise;
+    return AI_RESPONSES.default;
+  }
+
+  function appendMsg(text, type) {
+    const div = document.createElement('div');
+    div.className = `msg msg-${type}`;
+    div.innerHTML = text.replace(/\n/g, '<br>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return div;
+  }
+
+  function appendTyping() {
+    const div = document.createElement('div');
+    div.className = 'glass msg msg-bot typing';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return div;
+  }
+
+  function sendMessage() {
+    const text = chatInput ? chatInput.value.trim() : '';
+    if (!text) return;
+    chatInput.value = '';
+    appendMsg(text, 'user');
+    const typing = appendTyping();
+    setTimeout(() => {
+      typing.remove();
+      appendMsg(getAiResponse(text), 'bot');
+    }, 1200 + Math.random() * 600);
+  }
+
+  if (chatSendBtn) chatSendBtn.addEventListener('click', sendMessage);
+  if (chatInput) {
+    chatInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+  }
+
+  /* ── Contact form ── */
+  const contactSend = document.getElementById('contactSend');
+  const contactSuccess = document.getElementById('contactSuccess');
+  if (contactSend) {
+    contactSend.addEventListener('click', () => {
+      contactSend.textContent = 'Sending…';
+      contactSend.style.opacity = '.7';
+      setTimeout(() => {
+        contactSend.style.display = 'none';
+        contactSuccess.style.display = 'block';
+      }, 1400);
+    });
+  }
+</script>
+
+<!-- ─── IBM Watson Orchestrate — AI Chatbot Embed ─────────────── -->
+<script>
+  window.wxOConfiguration = {
+    orchestrationID: "c6b35a30629d43c39e11f8b25f9ab0f4_ed7a772b-1495-4d5c-9390-98371f30abee",
+    hostURL: "https://au-syd.watson-orchestrate.cloud.ibm.com",
+    rootElementID: "root",
+    deploymentPlatform: "ibmcloud",
+    crn: "crn:v1:bluemix:public:watsonx-orchestrate:au-syd:a/c6b35a30629d43c39e11f8b25f9ab0f4:ed7a772b-1495-4d5c-9390-98371f30abee::",
+    chatOptions: {
+        agentId: "cc73e611-c9c9-4501-b2da-4fb2b200323c", 
+    }
+  };
+  setTimeout(function () {
+    const script = document.createElement('script');
+    script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+    script.addEventListener('load', function () {
+        wxoLoader.init();
+    });
+    document.head.appendChild(script);
+  }, 0);                     
+</script>
+
+</body>
+</html>
